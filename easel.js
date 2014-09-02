@@ -36,17 +36,18 @@ var Canvas = React.createClass({displayName: 'Canvas',
 		ctx.strokeStyle = this.props.color;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
-		requestAnimationFrame(this.draw.bind(this, ctx));
+		requestAnimationFrame(this.draw);
 	},
-	componentDidUpdate: function() {
+	componentWillReceiveProps: function(props) {
 		var ctx = this.getDOMNode().getContext('2d');
-                ctx.lineWidth = this.props.size;
-                ctx.strokeStyle = this.props.color;
+		ctx.lineWidth = props.size;
+		ctx.strokeStyle = props.color;
 	},
 	draw: function() {
-		requestAnimationFrame(this.draw);
-		var ctx = this.getDOMNode().getContext('2d');
+		if(this.isMounted()) requestAnimationFrame(this.draw);
+		else return;
 		if(this.state.drawing) {
+			var ctx = this.getDOMNode().getContext('2d');
 			var currentMid = this.getMid(this.state.current);
 			ctx.beginPath();
 			ctx.moveTo(currentMid.x, currentMid.y);
