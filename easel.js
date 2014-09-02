@@ -7,7 +7,10 @@ var Canvas = React.createClass({displayName: 'Canvas',
 	},
 	mousedown: function(evt) {
 		var node = this.getDOMNode();
-		var coords =  {x:evt.pageX-node.offsetLeft, y:evt.pageY-node.offsetTop};
+		var x,y;
+		x = evt.pageX || evt.touches[0].pageX;
+		y = evt.pageY || evt.touches[0].pageY;
+		var coords =  {x:x-node.offsetLeft, y:y-node.offsetTop};
 		var mid = {x: coords.x+coords.x>>1, y: coords.y+coords.y>>1 }
 		this.setState({old: coords, current:coords, oldMid: mid, drawing: true });
 	},
@@ -16,7 +19,10 @@ var Canvas = React.createClass({displayName: 'Canvas',
 	},
 	mousemove: function(evt) {
 		var node = this.getDOMNode();
-		this.setState({ current: {x:evt.pageX-node.offsetLeft, y:evt.pageY-node.offsetTop}});
+		var x,y;
+		x = evt.pageX || evt.touches[0].pageX;
+		y = evt.pageY || evt.touches[0].pageY;
+		this.setState({ current: {x:x-node.offsetLeft, y:y-node.offsetTop}});
 	},
 	getMid: function(coords) {
 		return {
@@ -50,7 +56,7 @@ var Canvas = React.createClass({displayName: 'Canvas',
 		}
 	},
 	render: function() {
-		return React.DOM.canvas({onMouseDown: this.mousedown, onMouseUp: this.mouseup, onMouseMove: this.mousemove, width: this.props.width, height: this.props.height})
+		return React.DOM.canvas({onMouseDown: this.mousedown, onTouchStart: this.onmousedown, onTouchEnd: this.onmouseup, onTouchMove: this.mousemove, onMouseUp: this.mouseup, onMouseMove: this.mousemove, width: this.props.width, height: this.props.height})
 	}
 });
 var Controls = React.createClass({displayName: 'Controls',
